@@ -29,6 +29,12 @@
     </datalist>
     <h2>Score: <span id="score">0</span></h2>
     <script>
+      if ("serviceWorker" in navigator) {
+        navigator.serviceWorker
+          .register("./sw.js")
+          .then(() => console.log("Service Worker enregistré ! ✅"))
+          .catch((error) => console.log("Erreur d'enregistrement :", error));
+      }
       async function getGoal(url) {
         const response = await fetch(`missions/${url}.json`);
         const data = await response.json();

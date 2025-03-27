@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://raikou320.github.io/city-game/sitemap.xml

@@ -1,0 +1,21 @@
+{
+  "name": "Le jeu des villes",
+  "short_name": "City Game",
+  "description": "Le jeu des villes est un jeu où vous devrez explorer les villes, les différents lieux de son histoire.",
+  "start_url": "/index.html",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#a70707",
+  "icons": [
+    {
+      "src": "assets/pwa/icon-192x192.svg",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "assets/pwa/icon-512x512.svg",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

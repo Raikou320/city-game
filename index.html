@@ -1,11 +1,115 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
-    <meta chrset="UTF-8" />
+    <meta charset="UTF-8" />
+    <meta
+      name="keywords"
+      content="city game, jeu historique, histoire, patrimoine, exploration, géolocalisation, jeu mobile, découvertes, monuments"
+    />
+    <meta
+      name="description"
+      content="City Game: Explorez les villes et découvrez leur histoire et patrimoine à travers un jeu interactif basé sur la géolocalisation."
+    />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>City Game</title>
+    <link rel="manifest" href="manifest.json" />
   </head>
   <body>
-    <h1>The game is in development. Le jeu est en développement</h1>
+    <div id="cityDiv">
+      <input type="text" id="cityInput" placeholder="Ville" list="cities" />
+      <button id="checkCity">Verifier</button>
+    </div>
+    <div id="placeDiv" style="display: none">
+      <input type="text" id="placeInput" placeholder="Lieu" list="places" />
+      <button id="checkPlace">Verifier</button>
+    </div>
+    <datalist id="places"></datalist>
+    <datalist id="cities">
+      <option value="amiens"></option>
+    </datalist>
+    <h2>Score: <span id="score">0</span></h2>
+    <script>
+      async function getGoal(url) {
+        const response = await fetch(`missions/${url}.json`);
+        const data = await response.json();
+        const goalLocation = { lat: data.lat, lng: data.lng };
+        return goalLocation;
+      }
+
+      function getGeolocation() {
+        return new Promise((resolve, reject) => {
+          navigator.geolocation.getCurrentPosition(resolve, reject);
+        });
+      }
+
+      function geolocationSuccess(position) {
+        const { latitude, longitude } = position.coords;
+        const location = { lat: latitude, lng: longitude };
+        return location;
+      }
+
+      function geolocationError(error) {
+        console.log("Erreur de géolocalisation: ", error);
+      }
+
+      const places = {
+        amiens: ["mairie", "cathédrale"],
+      };
+
+      const score = document.getElementById("score");
+      const cityDiv = document.getElementById("cityDiv");
+      const cityInput = document.getElementById("cityInput");
+      const checkCity = document.getElementById("checkCity");
+      const placeDiv = document.getElementById("placeDiv");
+      const placeInput = document.getElementById("placeInput");
+      const checkPlace = document.getElementById("checkPlace");
+
+      checkCity.addEventListener("click", function () {
+        if (cityInput.value) {
+          const datalist = document.getElementById("places");
+          cityDiv.style.display = "none";
+          placeDiv.style.display = "block";
+          const presence = Object.keys(places).find(
+            (city) => city === cityInput.value.toLowerCase()
+          );
+          if (presence) {
+            const placesList = places[presence];
+            placesList.forEach((place) => {
+              const option = document.createElement("option");
+              option.textContent = place;
+              datalist.appendChild(option);
+            });
+          }
+        }
+      });
+
+      checkPlace.addEventListener("click", async function () {
+        if (placeInput.value) {
+          const cities = Object.keys(places);
+          const city = cities.find(
+            (city) => city === cityInput.value.toLowerCase()
+          );
+          if (city) {
+            try {
+              const position = await getGeolocation();
+              const location = geolocationSuccess(position);
+              const goal = await getGoal(
+                `${cityInput.value}/${placeInput.value}`
+              );
+              if (
+                Math.abs(location.lat - goal.lat) < 0.001 &&
+                Math.abs(location.lng - goal.lng) < 0.001
+              ) {
+                let currentScore = parseInt(score.innerText, 10);
+                currentScore++;
+                score.innerText = currentScore;
+              }
+            } catch (error) {
+              geolocationError(error);
+            }
+          }
+        }
+      });
+    </script>
   </body>
 </html>

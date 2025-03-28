@@ -19,6 +19,7 @@
       <input type="text" id="cityInput" placeholder="Ville" list="cities" />
       <button id="checkCity">Verifier</button>
     </div>
+    lorem*20000
     <div id="placeDiv" style="display: none">
       <input type="text" id="placeInput" placeholder="Lieu" list="places" />
       <button id="checkPlace">Verifier</button>
@@ -26,14 +27,13 @@
     <datalist id="places"></datalist>
     <datalist id="cities">
       <option value="amiens"></option>
+      <option value="moreuil"></option>
     </datalist>
     <h2>Score: <span id="score">0</span></h2>
     <script>
       if ("serviceWorker" in navigator) {
         navigator.serviceWorker
           .register("./sw.js")
-          .then(() => console.log("Service Worker enregistré ! ✅"))
-          .catch((error) => console.log("Erreur d'enregistrement :", error));
       }
       async function getGoal(url) {
         const response = await fetch(`missions/${url}.json`);
@@ -60,6 +60,7 @@
 
       const places = {
         amiens: ["mairie", "cathédrale"],
+        moreuil: ["parc des sports"]
       };
 
       const score = document.getElementById("score");
@@ -99,12 +100,13 @@
             try {
               const position = await getGeolocation();
               const location = geolocationSuccess(position);
+              const place = placeInput.value.toLowerCase().trim().replace('é', 'e').replaceAll(' ', '-')
               const goal = await getGoal(
-                `${cityInput.value}/${placeInput.value}`
+                `${cityInput.value}/${place}`
               );
               if (
-                Math.abs(location.lat - goal.lat) < 0.001 &&
-                Math.abs(location.lng - goal.lng) < 0.001
+                Math.abs(location.lat - goal.lat) < 1 &&
+                Math.abs(location.lng - goal.lng) < 1
               ) {
                 let currentScore = parseInt(score.innerText, 10);
                 currentScore++;

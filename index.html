@@ -104,8 +104,8 @@
                 `${cityInput.value}/${place}`
               );
               if (
-                Math.abs(location.lat - goal.lat) < 1 &&
-                Math.abs(location.lng - goal.lng) < 1
+                Math.abs(location.lat - goal.lat) < 0.001 &&
+                Math.abs(location.lng - goal.lng) < 0.001
               ) {
                 let currentScore = parseInt(score.innerText, 10);
                 currentScore++;

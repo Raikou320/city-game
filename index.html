@@ -19,6 +19,7 @@
       <input type="text" id="cityInput" placeholder="Ville" list="cities" />
       <button id="checkCity">Verifier</button>
     </div>
+    lorem*20000
     <div id="placeDiv" style="display: none">
       <input type="text" id="placeInput" placeholder="Lieu" list="places" />
       <button id="checkPlace">Verifier</button>
@@ -59,7 +60,7 @@
 
       const places = {
         amiens: ["mairie", "cathédrale"],
-        moreuil: ["parc des sports"]
+        moreuil: ["tour"]
       };
 
       const score = document.getElementById("score");
@@ -104,8 +105,8 @@
                 `${cityInput.value}/${place}`
               );
               if (
-                Math.abs(location.lat - goal.lat) < 0.001 &&
-                Math.abs(location.lng - goal.lng) < 0.001
+                Math.abs(location.lat - goal.lat) < 1 &&
+                Math.abs(location.lng - goal.lng) < 1
               ) {
                 let currentScore = parseInt(score.innerText, 10);
                 currentScore++;
